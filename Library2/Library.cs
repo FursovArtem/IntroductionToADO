@@ -27,12 +27,12 @@ namespace Library2
             { 
                 connection.Open();
                 string command = 
-                    $@"IF NOT EXISTS (SELECT author_id FROM Authors WHERE last_name = '{last_name}' AND first_name = '{first_name}')
+                    $@"IF NOT EXISTS (SELECT author_id FROM Authors WHERE last_name = N'{last_name}' AND first_name = N'{first_name}')
                        BEGIN
                            INSERT INTO Authors
                                (last_name, first_name)
                            VALUES
-                               ('{last_name}', '{first_name}')
+                               (N'{last_name}', N'{first_name}')
                        END";
                 cmd = new SqlCommand(command, connection);
                 cmd.ExecuteNonQuery();
@@ -43,20 +43,20 @@ namespace Library2
             }
         }
 
-        public void InsertBook(string book_title, string author_first_name, string author_last_name, int pages, double price)
+        public void InsertBook(string book_title, string author_first_name, string author_last_name, int pages, double price = 0)
         {
             InsertAuthor(author_first_name, author_last_name);
             try
             {
                 connection.Open();
                 string command = 
-                    $@"IF NOT EXISTS (SELECT book_id FROM Books WHERE title = '{book_title}')
+                    $@"IF NOT EXISTS (SELECT book_id FROM Books WHERE title = N'{book_title}')
                        BEGIN
-                           DECLARE @Author SMALLINT = (SELECT author_id FROM Authors WHERE first_name = '{author_first_name}' AND last_name = '{author_last_name}')
+                           DECLARE @Author SMALLINT = (SELECT author_id FROM Authors WHERE first_name = N'{author_first_name}' AND last_name = N'{author_last_name}')
                            INSERT INTO Books
                                (author, title, pages, price)
                            VALUES
-                               (@Author, '{book_title}', '{pages}', '{price}')
+                               (@Author, N'{book_title}', '{pages}', '{price}')
                        END";
                 cmd = new SqlCommand(command, connection);
                 cmd.ExecuteNonQuery();
@@ -93,13 +93,15 @@ namespace Library2
             {
                 connection.Open();
                 string command = $@"SELECT 
-                                        title AS Title,
-                                        [Author] = FORMATMESSAGE('%s %s', first_name, last_name)
+                                        [Author] = FORMATMESSAGE('%s %s', first_name, last_name),
+                                        title AS Title
                                     FROM Books 
-                                    JOIN Authors ON author = author_id";
+                                    JOIN Authors ON author = author_id
+                                    ORDER BY first_name ASC, last_name ASC";
                 cmd = new SqlCommand(command, connection);
                 SqlDataReader reader = cmd.ExecuteReader();
                 System.Console.WriteLine($"{reader.GetName(0).ToString().PadRight(50)} {reader.GetName(1).ToString().PadRight(50)}");
+                System.Console.WriteLine();
                 while (reader.Read())
                 {
                     System.Console.WriteLine($"{reader[0].ToString().PadRight(50)} {reader[1].ToString().PadRight(50)}");
@@ -111,22 +113,53 @@ namespace Library2
             }
         }
 
+        public void SelectBooks(string first_or_last_name)
+        {
+            try
+            {
+                connection.Open();
+                string command = $@"SELECT
+                                        [Author] = FORMATMESSAGE('%s %s', first_name, last_name),
+                                        title Title
+                                    FROM Books
+                                    JOIN Authors ON author = author_id
+                                    WHERE first_name = N'{first_or_last_name}' OR last_name = N'{first_or_last_name}'
+                                    ORDER BY first_name ASC, last_name ASC";
+                cmd = new SqlCommand(command, connection);
+                SqlDataReader reader = cmd.ExecuteReader();
+                System.Console.WriteLine($"{reader.GetName(0).ToString().PadRight(50)} {reader.GetName(1).ToString().PadRight(50)}");
+                System.Console.WriteLine();
+                while (reader.Read())
+                {
+                    System.Console.WriteLine($"{reader[0].ToString().PadRight(50)} {reader[1].ToString().PadRight(50)}");
+                }
+            }
+            finally
+            {
+                if (connection != null) connection.Close();
+            }
+        }
+
         public void SelectBooks(string first_name, string last_name)
         {
             try
             {
                 connection.Open();
                 string command = $@"SELECT
-                                        title AS ""All of {first_name} {last_name} books:""
+                                        [Author] = FORMATMESSAGE('%s %s', first_name, last_name),
+                                        title AS Title
                                     FROM Books
                                     JOIN Authors ON author = author_id
-                                    WHERE first_name = '{first_name}' AND last_name = '{last_name}'";
+                                    WHERE (first_name = N'{first_name}' OR first_name = N'{last_name}')
+                                        AND (last_name = N'{first_name}' OR last_name = N'{last_name}')
+                                    ORDER BY first_name ASC, last_name ASC";
                 cmd = new SqlCommand(command, connection);
                 SqlDataReader reader = cmd.ExecuteReader();
-                System.Console.WriteLine($"{reader.GetName(0).ToString().PadRight(50)}");
+                System.Console.WriteLine($"{reader.GetName(0).ToString().PadRight(50)} {reader.GetName(1).ToString().PadRight(50)}");
+                System.Console.WriteLine();
                 while (reader.Read())
                 {
-                    System.Console.WriteLine($"{reader[0].ToString().PadRight(50)}");
+                    System.Console.WriteLine($"{reader[0].ToString().PadRight(50)} {reader[1].ToString().PadRight(50)}");
                 }
             }
             finally
