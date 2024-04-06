@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Library2
 {
@@ -10,6 +11,8 @@ namespace Library2
         SqlConnection connection;
 
         public SqlCommand cmd { get; set; }
+
+        public Library() : this(ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString) { }
 
         public Library(string connectionString)
         {
