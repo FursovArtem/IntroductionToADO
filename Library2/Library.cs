@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 
 namespace Library2
 {
@@ -27,14 +28,31 @@ namespace Library2
             { 
                 connection.Open();
                 string command = 
-                    $@"IF NOT EXISTS (SELECT author_id FROM Authors WHERE last_name = N'{last_name}' AND first_name = N'{first_name}')
+                    $@"IF NOT EXISTS (SELECT author_id FROM Authors WHERE last_name = @paramLastName AND first_name = @paramFirstName)
                        BEGIN
                            INSERT INTO Authors
                                (last_name, first_name)
                            VALUES
-                               (N'{last_name}', N'{first_name}')
+                               (@paramLastName, @paramFirstName)
                        END";
                 cmd = new SqlCommand(command, connection);
+                // 1)
+                /*SqlParameter parameterLastName = new SqlParameter("paramLastName", SqlDbType.NVarChar);
+                SqlParameter parameterFirstName = new SqlParameter("paramFirstName", SqlDbType.NVarChar);
+                parameterLastName.Value = last_name;
+                parameterFirstName.Value = first_name;
+                cmd.Parameters.Add(parameterLastName);
+                cmd.Parameters.Add(parameterFirstName);*/
+                // 2)
+                /*SqlParameter[] values = new SqlParameter[]
+                {
+                    new SqlParameter("paramLastName", last_name),
+                    new SqlParameter("paramFirstName", first_name)
+                };
+                cmd.Parameters.AddRange(values);*/
+                // 3)
+                cmd.Parameters.AddWithValue("paramLastName", last_name);
+                cmd.Parameters.AddWithValue("paramFirstName", first_name);
                 cmd.ExecuteNonQuery();
             } 
             finally
@@ -72,7 +90,7 @@ namespace Library2
             try
             {
                 connection.Open();
-                string command = "SELECT * FROM Authors";
+                string command = "SELECT * FROM Authors ORDER BY last_name, first_name";
                 cmd = new SqlCommand(command, connection);
                 SqlDataReader reader = cmd.ExecuteReader();
                 System.Console.WriteLine($"{reader.GetName(0).PadRight(10)} {reader.GetName(1).PadRight(15)} {reader.GetName(2).PadRight(15)}");

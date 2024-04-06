@@ -16,6 +16,9 @@ TrustServerCertificate=False;
 ApplicationIntent=ReadWrite;
 MultiSubnetFailover=False";
             Library library = new Library(connectionString);
+            //library.InsertAuthor("Randy", "Gage; CREATE TABLE Guys (id INT PRIMARY KEY, name NVARCHAR(50))");
+            library.SelectAuthors();
+            Console.WriteLine();
             library.SelectBooks();
         }
     }
