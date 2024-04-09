@@ -54,20 +54,8 @@ namespace Library3
 
         private void comboBoxTables_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string cmdLine = $"SELECT * FROM {comboBoxTables.SelectedItem}";
-            SqlCommand cmd = new SqlCommand(cmdLine, connection);
-            connection.Open();
-            reader = cmd.ExecuteReader();
-            table = new DataTable();
-            for (int i = 0; i < reader.FieldCount; i++) table.Columns.Add(reader.GetName(i));
-            while (reader.Read())
-            {
-                DataRow row = table.NewRow();
-                for (int i = 0; i < reader.FieldCount; i++) row[i] = reader[i];
-                table.Rows.Add(row);
-            }
-            dataGridView.DataSource = table;
-            connection.Close();
+            richTextBoxQuery.Text = $"SELECT * FROM {comboBoxTables.SelectedItem}";
+            buttonExecute_Click(sender, e);
         }
     }
 }
