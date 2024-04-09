@@ -24,7 +24,7 @@ namespace Library3
             InitializeComponent();
             connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
             connection = new SqlConnection(connectionString);
-            MessageBox.Show(this, connection.ConnectionString, "ConnectionString", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show(this, connection.ConnectionString, "ConnectionString", MessageBoxButtons.OK, MessageBoxIcon.Information);
             richTextBoxQuery.SelectAll();
             richTextBoxQuery.SelectionAlignment = HorizontalAlignment.Center;
 
@@ -36,25 +36,40 @@ namespace Library3
 
         private void buttonExecute_Click(object sender, EventArgs e)
         {
-            string cmdLine = richTextBoxQuery.Text;
-            SqlCommand cmd = new SqlCommand(cmdLine, connection);
-            connection.Open();
-            reader = cmd.ExecuteReader();
-            table = new DataTable();
-            for (int i = 0; i < reader.FieldCount; i++) table.Columns.Add(reader.GetName(i));
-            while (reader.Read())
+            try
             {
-                DataRow row = table.NewRow();
-                for (int i = 0; i < reader.FieldCount; i++) row[i] = reader[i];
-                table.Rows.Add(row);
+                string cmdLine = richTextBoxQuery.Text;
+                SqlCommand cmd = new SqlCommand(cmdLine, connection);
+                connection.Open();
+                reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
+                table = new DataTable();
+                for (int i = 0; i < reader.FieldCount; i++) table.Columns.Add(reader.GetName(i));
+                while (reader.Read())
+                {
+                    DataRow row = table.NewRow();
+                    for (int i = 0; i < reader.FieldCount; i++) row[i] = reader[i];
+                    table.Rows.Add(row);
+                }
+                dataGridView.DataSource = table;
+
+                table = reader.GetSchemaTable();
+                comboBoxTables.SelectedIndex = comboBoxTables.FindStringExact(table.Rows[0]["BaseTableName"].ToString());
             }
-            dataGridView.DataSource = table;
-            connection.Close();
+            /*catch (Exception ex)
+            {
+                if (ex is InvalidOperationException) MessageBox.Show("Query line is empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else if (ex is SqlException) MessageBox.Show("Invalid query", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }*/
+            finally
+            {
+                connection?.Close();
+            }
         }
 
         private void comboBoxTables_SelectedIndexChanged(object sender, EventArgs e)
         {
             richTextBoxQuery.Text = $"SELECT * FROM {comboBoxTables.SelectedItem}";
+            connection?.Close();
             buttonExecute_Click(sender, e);
         }
     }
