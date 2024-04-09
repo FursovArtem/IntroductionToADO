@@ -36,10 +36,19 @@ namespace Library3
 
         private void buttonExecute_Click(object sender, EventArgs e)
         {
+            LoadDataToGrid(richTextBoxQuery.Text);
+        }
+
+        private void comboBoxTables_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadDataToGrid($"SELECT * FROM {comboBoxTables.SelectedItem}");
+        }
+
+        private void LoadDataToGrid(string command)
+        {
             try
             {
-                string cmdLine = richTextBoxQuery.Text;
-                SqlCommand cmd = new SqlCommand(cmdLine, connection);
+                SqlCommand cmd = new SqlCommand(command, connection);
                 connection.Open();
                 reader = cmd.ExecuteReader(CommandBehavior.KeyInfo);
                 table = new DataTable();
@@ -51,26 +60,11 @@ namespace Library3
                     table.Rows.Add(row);
                 }
                 dataGridView.DataSource = table;
-
-                table = reader.GetSchemaTable();
-                comboBoxTables.SelectedIndex = comboBoxTables.FindStringExact(table.Rows[0]["BaseTableName"].ToString());
             }
-            /*catch (Exception ex)
-            {
-                if (ex is InvalidOperationException) MessageBox.Show("Query line is empty", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else if (ex is SqlException) MessageBox.Show("Invalid query", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }*/
             finally
             {
                 connection?.Close();
             }
-        }
-
-        private void comboBoxTables_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            richTextBoxQuery.Text = $"SELECT * FROM {comboBoxTables.SelectedItem}";
-            connection?.Close();
-            buttonExecute_Click(sender, e);
         }
     }
 }
