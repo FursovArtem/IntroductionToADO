@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Runtime.InteropServices;
@@ -16,20 +15,20 @@ namespace Academy
 {
 	public partial class MainForm : Form
 	{
-		string connectionString;
-		SqlConnection connection;
-		SqlDataReader reader;
-		DataTable table;
+		//string connectionString;
+		//SqlConnection connection;
+		//SqlDataReader reader;
+		//DataTable table;
 		public MainForm()
 		{
 			InitializeComponent();
-			connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
-			if (AllocConsole())
-			{
-				Console.WriteLine(connectionString);
-				//FreeConsole();
-			}
-			connection = new SqlConnection(connectionString);
+			//connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
+			//if (AllocConsole())
+			//{
+			//	Console.WriteLine(connectionString);
+			//	//FreeConsole();
+			//}
+			//connection = new SqlConnection(connectionString);
 			LoadStudents();
 			LoadDataToComboBox("Groups", "group_name", comboBoxStudentsGroup);
 			LoadDataToComboBox("Directions", "direction_name", comboBoxStudentsDirection);
@@ -37,54 +36,29 @@ namespace Academy
 
 		void LoadStudents(string condition = null)
 		{
-			connection.Open();
-			string cmd = $@"
-SELECT 
-		[Ф.И.О.]		= FORMATMESSAGE('%s %s %s', last_name, first_name, middle_name),
-		[Дата рожения]	= birth_date,
-		[Группа]		= group_name,
-		[Направление]	= direction_name
-FROM Students
-JOIN Groups		ON ([group]=group_id)
-JOIN Directions ON (direction=direction_id)
-";
-			if (condition != null && !condition.Contains("Все"))
-			{
-				cmd += $"WHERE {condition}";
-			}
-			Console.WriteLine(cmd);
-			SqlCommand command = new SqlCommand(cmd, connection);
-			reader = command.ExecuteReader();
-			table = new DataTable();
-			for (int i = 0; i < reader.FieldCount; i++) table.Columns.Add(reader.GetName(i));
-			while (reader.Read())
-			{
-				DataRow row = table.NewRow();
-				for (int i = 0; i < reader.FieldCount; i++) row[i] = reader[i];
-				table.Rows.Add(row);
-			}
-			dataGridViewStudents.DataSource = table;
-			connection.Close();
-		}
+			string column = $@"
+[Ф.И.О.] = FORMATMESSAGE('%s %s %s', last_name, first_name, middle_name),
+[Дата рожения] = birth_date,
+[Группа] = group_name,
+[Направление] = direction_name";
+			string tables = "students, groups, directions";
+			string relations = "Students.[group]=group_id AND direction=direction_id";
+			if (condition != null && !condition.Contains("Все")) condition = $@"{relations} AND {condition}";
+			else condition = relations;
+			Connector connector = new Connector();
+			dataGridViewStudents.DataSource = connector.LoadColumnFromTable(column, tables, condition);
+        }
 		void LoadDataToComboBox(string tables, string column, ComboBox list, string condition = null)
 		{
 			list.Items.Clear();
 			list.Items.Add("Все");
 			list.SelectedIndex = 0;
-			string cmd = $"SELECT {column} FROM {tables}";
-			if (condition != null)
-			{
-				cmd += $" WHERE {condition}";
-			}
-			Console.WriteLine(cmd);
-			connection.Open();
-			SqlCommand command = new SqlCommand(cmd, connection);
-			reader = command.ExecuteReader();
-			while (reader.Read())
-			{
-				list.Items.Add(reader[0]);
-			}
-			connection.Close();
+			Connector connector = new Connector();
+			connector.LoadColumnFromTable(column, tables, condition);
+			string[] items = new string[connector.DataTable.Rows.Count];
+			for (int i = 0; i < items.Length; i++)
+				items[i] = connector.DataTable.Rows[i][0].ToString();
+			list.Items.AddRange(items);
 		}
 		[DllImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
