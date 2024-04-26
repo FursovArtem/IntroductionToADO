@@ -24,7 +24,7 @@ namespace Academy
         {
             connection.Open();
             string query = $@"SELECT {columns} FROM {tables}";
-            if (condition != null) query += $" WHERE {condition}";
+            if (condition != null && !condition.Contains("Все")) query += $" WHERE {condition}";
             SqlCommand command = new SqlCommand(query, connection);
             reader = command.ExecuteReader();
             DataTable = new DataTable();
@@ -37,6 +37,23 @@ namespace Academy
             }
             connection.Close();
             return DataTable;
+        }
+        public void InsertDataToBase(string table, string columns, string values)
+        {
+            string command = $@"INSERT INTO {table}({columns}) VALUES ({values})";
+            connection.Open();
+            SqlCommand cmd = new SqlCommand(command, connection);
+            cmd.ExecuteNonQuery();
+            connection.Close();
+        }
+        public int GetIDByValue(string table, string columns, string value)
+        {
+            string command = $"SELECT {columns.Split(',')[0]} FROM {table} WHERE {columns.Split(',')[1]}='{value}'";
+            connection.Open();
+            SqlCommand cmd = new SqlCommand(command, connection);
+            int id = Convert.ToInt32(cmd.ExecuteScalar());
+            connection.Close();
+            return id;
         }
     }
 }
