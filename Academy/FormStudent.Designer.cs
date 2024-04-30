@@ -52,6 +52,7 @@
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonBrows = new System.Windows.Forms.Button();
+            this.labelID = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -315,11 +316,21 @@
             this.buttonBrows.UseVisualStyleBackColor = true;
             this.buttonBrows.Click += new System.EventHandler(this.buttonBrows_Click);
             // 
+            // labelID
+            // 
+            this.labelID.AutoSize = true;
+            this.labelID.Location = new System.Drawing.Point(365, 248);
+            this.labelID.Name = "labelID";
+            this.labelID.Size = new System.Drawing.Size(105, 13);
+            this.labelID.TabIndex = 15;
+            this.labelID.Text = "ID студента в базе:";
+            // 
             // FormStudent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(528, 298);
+            this.Controls.Add(this.labelID);
             this.Controls.Add(this.buttonBrows);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSave);
@@ -339,6 +350,7 @@
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPhoto)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
@@ -367,5 +379,6 @@
 		private System.Windows.Forms.Button buttonSave;
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.Button buttonBrows;
-	}
+        private System.Windows.Forms.Label labelID;
+    }
 }

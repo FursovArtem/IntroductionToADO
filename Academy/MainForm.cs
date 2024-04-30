@@ -12,6 +12,7 @@ using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Collections.Specialized;
 using System.IO;
+using System.Net.Http;
 
 namespace Academy
 {
@@ -103,9 +104,10 @@ namespace Academy
             //byte[] imageBytes = Encoding.Unicode.GetBytes(items[7]);
             //MemoryStream ms = new MemoryStream(imageBytes);
             //Image img = Image.FromStream(ms);
+            Image img = connector.LoadImage("Students", "photo", $"stud_id={items[0]}");
             //
             FormStudent form = new FormStudent();
-            form.InitForm(items[1], items[2], items[3], birth_date, items[5], items[6], items[8], items[9]);
+            form.InitForm(items[0], items[1], items[2], items[3], birth_date, items[5], items[6], items[8], items[9], img);
             form.ShowDialog();
         }
     }
