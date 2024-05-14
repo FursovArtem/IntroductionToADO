@@ -24,6 +24,9 @@ namespace Academy
             LoadStudents();
             FormDataLoader.LoadDataToComboBox("Groups", "group_name", comboBoxStudentsGroup, null, "Все");
             FormDataLoader.LoadDataToComboBox("Directions", "direction_name", comboBoxStudentsDirection, null, "Все");
+            //////
+            LoadTeachers();
+            FormDataLoader.LoadDataToComboBox("Disciplines", "discipline_name", comboBoxTeachersDiscipline, null, "Все");
         }
 
         void LoadStudents(string condition = null)
@@ -43,6 +46,7 @@ namespace Academy
             dataGridViewStudents.Columns[0].Visible = false;
             setStatus();
         }
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -55,6 +59,7 @@ namespace Academy
             LoadStudents($"group_name = '{comboBoxStudentsGroup.SelectedItem.ToString()}'");
             setStatus();
         }
+
         private void setStatus()
         {
             toolStripStatusLabelStudentsCount.Text = $"Количество студентов: {dataGridViewStudents.RowCount - 1}";
@@ -109,6 +114,39 @@ namespace Academy
             FormStudent form = new FormStudent();
             form.InitForm(items[0], items[1], items[2], items[3], birth_date, items[5], items[6], items[8], items[9], img);
             form.ShowDialog();
+        }
+
+        private void richTextBoxSearchString_TextChanged(object sender, EventArgs e)
+        {
+            LoadStudents($"(last_name LIKE '%{richTextBoxSearchString.Text}%' OR first_name LIKE '%{richTextBoxSearchString.Text}%' OR middle_name LIKE '%{richTextBoxSearchString.Text}%' OR group_name LIKE '%{richTextBoxSearchString.Text}%' OR direction_name LIKE '%{richTextBoxSearchString.Text}%')");
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
+        
+        private void LoadTeachers(string condition = null)
+        {
+            string column = $@"
+				[ID] = teacher_id,
+				[Ф.И.О.] = FORMATMESSAGE('%s %s %s', last_name, first_name, middle_name),
+				[Дата рожения] = birth_date,
+				[Дисциплины] = discipline_name";
+            string tables = "Teachers, TeachersDisciplinesRelation, Disciplines";
+            string relations = "Teachers.teacher_id=teacher AND discipline=discipline_id";
+            if (condition != null && !condition.Contains("Все")) condition = $@"{relations} AND {condition}";
+            else condition = relations;
+            Connector connector = new Connector();
+            dataGridViewTeachers.DataSource = connector.LoadColumnFromTable(column, tables, condition);
+            dataGridViewTeachers.Columns[0].Visible = false;
+        }
+
+        private void comboBoxTeachersDiscipline_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadTeachers($"discipline_name = '{comboBoxTeachersDiscipline.SelectedItem}'");
+        }
+
+        private void richTextBoxSearchStringTeachers_TextChanged(object sender, EventArgs e)
+        {
+            LoadTeachers($"(last_name LIKE '%{richTextBoxSearchStringTeachers.Text}%' OR first_name LIKE '%{richTextBoxSearchStringTeachers.Text}%' OR middle_name LIKE '%{richTextBoxSearchStringTeachers.Text}%' OR discipline_name LIKE '%{richTextBoxSearchStringTeachers.Text}%')");
         }
     }
 }

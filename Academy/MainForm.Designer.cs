@@ -30,6 +30,7 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageStudents = new System.Windows.Forms.TabPage();
+            this.richTextBoxSearchString = new System.Windows.Forms.RichTextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStudentsCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelGroupsCount = new System.Windows.Forms.ToolStripStatusLabel();
@@ -42,10 +43,17 @@
             this.tabPageGroups = new System.Windows.Forms.TabPage();
             this.tabPageSchedule = new System.Windows.Forms.TabPage();
             this.tabPageTeachers = new System.Windows.Forms.TabPage();
+            this.richTextBoxSearchStringTeachers = new System.Windows.Forms.RichTextBox();
+            this.buttonAddTeacher = new System.Windows.Forms.Button();
+            this.comboBoxTeachersDiscipline = new System.Windows.Forms.ComboBox();
+            this.labelTeachersDiscipline = new System.Windows.Forms.Label();
+            this.dataGridViewTeachers = new System.Windows.Forms.DataGridView();
             this.tabControl.SuspendLayout();
             this.tabPageStudents.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStudents)).BeginInit();
+            this.tabPageTeachers.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTeachers)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -63,6 +71,7 @@
             // 
             // tabPageStudents
             // 
+            this.tabPageStudents.Controls.Add(this.richTextBoxSearchString);
             this.tabPageStudents.Controls.Add(this.statusStrip);
             this.tabPageStudents.Controls.Add(this.buttonAddStudent);
             this.tabPageStudents.Controls.Add(this.dataGridViewStudents);
@@ -77,6 +86,16 @@
             this.tabPageStudents.TabIndex = 0;
             this.tabPageStudents.Text = "Студенты";
             this.tabPageStudents.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxSearchString
+            // 
+            this.richTextBoxSearchString.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBoxSearchString.Location = new System.Drawing.Point(12, 10);
+            this.richTextBoxSearchString.Name = "richTextBoxSearchString";
+            this.richTextBoxSearchString.Size = new System.Drawing.Size(229, 26);
+            this.richTextBoxSearchString.TabIndex = 7;
+            this.richTextBoxSearchString.Text = "";
+            this.richTextBoxSearchString.TextChanged += new System.EventHandler(this.richTextBoxSearchString_TextChanged);
             // 
             // statusStrip
             // 
@@ -104,9 +123,11 @@
             // 
             // buttonAddStudent
             // 
-            this.buttonAddStudent.Location = new System.Drawing.Point(709, 11);
+            this.buttonAddStudent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddStudent.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddStudent.Location = new System.Drawing.Point(697, 10);
             this.buttonAddStudent.Name = "buttonAddStudent";
-            this.buttonAddStudent.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddStudent.Size = new System.Drawing.Size(87, 26);
             this.buttonAddStudent.TabIndex = 5;
             this.buttonAddStudent.Text = "Добавить";
             this.buttonAddStudent.UseVisualStyleBackColor = true;
@@ -130,39 +151,41 @@
             // 
             // comboBoxStudentsGroup
             // 
+            this.comboBoxStudentsGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxStudentsGroup.FormattingEnabled = true;
-            this.comboBoxStudentsGroup.Location = new System.Drawing.Point(61, 12);
+            this.comboBoxStudentsGroup.Location = new System.Drawing.Point(325, 10);
             this.comboBoxStudentsGroup.Name = "comboBoxStudentsGroup";
-            this.comboBoxStudentsGroup.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxStudentsGroup.Size = new System.Drawing.Size(78, 26);
             this.comboBoxStudentsGroup.TabIndex = 3;
             this.comboBoxStudentsGroup.SelectedIndexChanged += new System.EventHandler(this.comboBoxStudentsGroup_SelectedIndexChanged);
             // 
             // labelStudentsGroup
             // 
-            this.labelStudentsGroup.AutoSize = true;
-            this.labelStudentsGroup.Location = new System.Drawing.Point(9, 16);
+            this.labelStudentsGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelStudentsGroup.Location = new System.Drawing.Point(261, 10);
             this.labelStudentsGroup.Name = "labelStudentsGroup";
-            this.labelStudentsGroup.Size = new System.Drawing.Size(45, 13);
+            this.labelStudentsGroup.Size = new System.Drawing.Size(58, 26);
             this.labelStudentsGroup.TabIndex = 2;
-            this.labelStudentsGroup.Text = "Группа:";
+            this.labelStudentsGroup.Text = "Группа";
             // 
             // comboBoxStudentsDirection
             // 
+            this.comboBoxStudentsDirection.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBoxStudentsDirection.FormattingEnabled = true;
-            this.comboBoxStudentsDirection.Location = new System.Drawing.Point(374, 12);
+            this.comboBoxStudentsDirection.Location = new System.Drawing.Point(520, 10);
             this.comboBoxStudentsDirection.Name = "comboBoxStudentsDirection";
-            this.comboBoxStudentsDirection.Size = new System.Drawing.Size(283, 21);
+            this.comboBoxStudentsDirection.Size = new System.Drawing.Size(171, 26);
             this.comboBoxStudentsDirection.TabIndex = 1;
             this.comboBoxStudentsDirection.SelectedIndexChanged += new System.EventHandler(this.comboBoxStudentsDirection_SelectedIndexChanged);
             // 
             // labelStudentsDirection
             // 
-            this.labelStudentsDirection.AutoSize = true;
-            this.labelStudentsDirection.Location = new System.Drawing.Point(241, 16);
+            this.labelStudentsDirection.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelStudentsDirection.Location = new System.Drawing.Point(409, 10);
             this.labelStudentsDirection.Name = "labelStudentsDirection";
-            this.labelStudentsDirection.Size = new System.Drawing.Size(127, 13);
+            this.labelStudentsDirection.Size = new System.Drawing.Size(105, 26);
             this.labelStudentsDirection.TabIndex = 0;
-            this.labelStudentsDirection.Text = "Направление обучения:";
+            this.labelStudentsDirection.Text = "Направление";
             // 
             // tabPageGroups
             // 
@@ -186,6 +209,11 @@
             // 
             // tabPageTeachers
             // 
+            this.tabPageTeachers.Controls.Add(this.richTextBoxSearchStringTeachers);
+            this.tabPageTeachers.Controls.Add(this.buttonAddTeacher);
+            this.tabPageTeachers.Controls.Add(this.comboBoxTeachersDiscipline);
+            this.tabPageTeachers.Controls.Add(this.labelTeachersDiscipline);
+            this.tabPageTeachers.Controls.Add(this.dataGridViewTeachers);
             this.tabPageTeachers.Location = new System.Drawing.Point(4, 22);
             this.tabPageTeachers.Name = "tabPageTeachers";
             this.tabPageTeachers.Padding = new System.Windows.Forms.Padding(3);
@@ -193,6 +221,61 @@
             this.tabPageTeachers.TabIndex = 3;
             this.tabPageTeachers.Text = "Преподаватели";
             this.tabPageTeachers.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxSearchStringTeachers
+            // 
+            this.richTextBoxSearchStringTeachers.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBoxSearchStringTeachers.Location = new System.Drawing.Point(12, 10);
+            this.richTextBoxSearchStringTeachers.Name = "richTextBoxSearchStringTeachers";
+            this.richTextBoxSearchStringTeachers.Size = new System.Drawing.Size(229, 26);
+            this.richTextBoxSearchStringTeachers.TabIndex = 13;
+            this.richTextBoxSearchStringTeachers.Text = "";
+            this.richTextBoxSearchStringTeachers.TextChanged += new System.EventHandler(this.richTextBoxSearchStringTeachers_TextChanged);
+            // 
+            // buttonAddTeacher
+            // 
+            this.buttonAddTeacher.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddTeacher.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddTeacher.Location = new System.Drawing.Point(697, 10);
+            this.buttonAddTeacher.Name = "buttonAddTeacher";
+            this.buttonAddTeacher.Size = new System.Drawing.Size(87, 26);
+            this.buttonAddTeacher.TabIndex = 12;
+            this.buttonAddTeacher.Text = "Добавить";
+            this.buttonAddTeacher.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxTeachersDiscipline
+            // 
+            this.comboBoxTeachersDiscipline.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBoxTeachersDiscipline.FormattingEnabled = true;
+            this.comboBoxTeachersDiscipline.Location = new System.Drawing.Point(388, 10);
+            this.comboBoxTeachersDiscipline.Name = "comboBoxTeachersDiscipline";
+            this.comboBoxTeachersDiscipline.Size = new System.Drawing.Size(303, 26);
+            this.comboBoxTeachersDiscipline.TabIndex = 9;
+            this.comboBoxTeachersDiscipline.SelectedIndexChanged += new System.EventHandler(this.comboBoxTeachersDiscipline_SelectedIndexChanged);
+            // 
+            // labelTeachersDiscipline
+            // 
+            this.labelTeachersDiscipline.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelTeachersDiscipline.Location = new System.Drawing.Point(277, 10);
+            this.labelTeachersDiscipline.Name = "labelTeachersDiscipline";
+            this.labelTeachersDiscipline.Size = new System.Drawing.Size(105, 26);
+            this.labelTeachersDiscipline.TabIndex = 8;
+            this.labelTeachersDiscipline.Text = "Дисциплина";
+            // 
+            // dataGridViewTeachers
+            // 
+            this.dataGridViewTeachers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewTeachers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewTeachers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTeachers.Location = new System.Drawing.Point(12, 47);
+            this.dataGridViewTeachers.MultiSelect = false;
+            this.dataGridViewTeachers.Name = "dataGridViewTeachers";
+            this.dataGridViewTeachers.ReadOnly = true;
+            this.dataGridViewTeachers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewTeachers.Size = new System.Drawing.Size(772, 369);
+            this.dataGridViewTeachers.TabIndex = 5;
             // 
             // MainForm
             // 
@@ -208,6 +291,8 @@
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStudents)).EndInit();
+            this.tabPageTeachers.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTeachers)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -219,15 +304,21 @@
 		private System.Windows.Forms.TabPage tabPageGroups;
 		private System.Windows.Forms.TabPage tabPageSchedule;
 		private System.Windows.Forms.DataGridView dataGridViewStudents;
-		private System.Windows.Forms.ComboBox comboBoxStudentsGroup;
-		private System.Windows.Forms.Label labelStudentsGroup;
-		private System.Windows.Forms.ComboBox comboBoxStudentsDirection;
-		private System.Windows.Forms.Label labelStudentsDirection;
 		private System.Windows.Forms.TabPage tabPageTeachers;
-		private System.Windows.Forms.Button buttonAddStudent;
 		private System.Windows.Forms.StatusStrip statusStrip;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelStudentsCount;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGroupsCount;
-	}
+        private System.Windows.Forms.DataGridView dataGridViewTeachers;
+        private System.Windows.Forms.RichTextBox richTextBoxSearchString;
+        private System.Windows.Forms.Button buttonAddStudent;
+        private System.Windows.Forms.ComboBox comboBoxStudentsGroup;
+        private System.Windows.Forms.Label labelStudentsGroup;
+        private System.Windows.Forms.ComboBox comboBoxStudentsDirection;
+        private System.Windows.Forms.Label labelStudentsDirection;
+        private System.Windows.Forms.RichTextBox richTextBoxSearchStringTeachers;
+        private System.Windows.Forms.Button buttonAddTeacher;
+        private System.Windows.Forms.ComboBox comboBoxTeachersDiscipline;
+        private System.Windows.Forms.Label labelTeachersDiscipline;
+    }
 }
 
